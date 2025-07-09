@@ -24,7 +24,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from typing import Literal, List
-from 
 from pydantic import BaseModel, Field
 
 
