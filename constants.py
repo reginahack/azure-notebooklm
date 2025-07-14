@@ -15,11 +15,11 @@ GRADIO_CACHE_DIR = "./gradio_cached_examples/tmp/"
 GRADIO_CLEAR_CACHE_OLDER_THAN = 1 * 24 * 60 * 60  # 1 day
 
 # Error messages-related constants
-ERROR_MESSAGE_NO_INPUT = "Please provide at least one PDF file or a URL."
+ERROR_MESSAGE_NO_INPUT = "Please provide at least one input: upload PDF file(s), enter a URL, or paste text directly."
 ERROR_MESSAGE_NOT_PDF = "The provided file is not a PDF. Please upload only PDF files."
 ERROR_MESSAGE_NOT_SUPPORTED_IN_MELO_TTS = "The selected language is not supported without advanced audio generation. Please enable advanced audio generation or choose a supported language."
 ERROR_MESSAGE_READING_PDF = "Error reading the PDF file"
-ERROR_MESSAGE_TOO_LONG = "The total content is too long. Please ensure the combined text from PDFs and URL is fewer than {CHARACTER_LIMIT} characters."
+ERROR_MESSAGE_TOO_LONG = "The total content is too long. Please ensure the combined text from PDFs, URL, and direct text input is fewer than {CHARACTER_LIMIT} characters."
 
 JSON_RETRY_ATTEMPTS = 1
 
@@ -29,13 +29,15 @@ JINA_RETRY_ATTEMPTS = 3
 JINA_RETRY_DELAY = 5  # in seconds
 
 # Speech synthesis constants
-SPEECH_RATE = "1.2"  # 1.0 = normal speed, 1.2 = 20% faster, 0.8 = 20% slower
+SPEECH_RATE = "1.1"  # 1.0 = normal speed, 1.2 = 20% faster, 0.8 = 20% slower
+SPEECH_FORMAT = "Riff48Khz16BitMonoPcm"  # Highest quality uncompressed 48kHz 16-bit WAV format
+AUDIO_FILE_EXTENSION = ".wav"
 
 # Suno related constants
 LANGUAGE_MAPPING = {
     "English": "en",
     "German": "de",
-    "French": "fr",
+    "French": "fr"
 }
 
 # UI-related constants
@@ -63,22 +65,27 @@ UI_INPUTS = {
         "label": "2. 🔗 Paste a URL (optional)",
         "placeholder": "Enter a URL to include its content",
     },
+    "text_input": {
+        "label": "3. 📝 Or paste your text directly (optional)",
+        "placeholder": "Paste your text content here as an alternative to PDFs or URLs",
+        "lines": 5,
+    },
     "question": {
-        "label": "3. 🤔 Do you have a specific question or topic in mind?",
+        "label": "4. 🤔 Do you have a specific question or topic in mind?",
         "placeholder": "Enter a question or topic",
     },
     "tone": {
-        "label": "4. 🎭 Choose the tone",
+        "label": "5. 🎭 Choose the tone",
         "choices": ["Fun", "Formal"],
         "value": "Fun",
     },
     "length": {
-        "label": "5. ⏱️ Choose the length",
+        "label": "6. ⏱️ Choose the length",
         "choices": ["Short (1-2 min)", "Medium (3-5 min)"],
         "value": "Short (1-2 min)",
     },
     "language": {
-        "label": "6. 🌐 Choose the language",
+        "label": "7. 🌐 Choose the language",
         "choices": UI_AVAILABLE_LANGUAGES,
         "value": "English",
     },
@@ -97,6 +104,7 @@ UI_EXAMPLES = [
         [str(Path("examples/KFE_news_sample.pdf"))],
         "",
         "",
+        "",
         "Fun",
         "Short (1-2 min)",
         "English",
@@ -104,6 +112,7 @@ UI_EXAMPLES = [
     ],
     [
         [str(Path("examples/KFE_paper_sample.pdf"))],
+        "",
         "",
         "",
         "Fun",
