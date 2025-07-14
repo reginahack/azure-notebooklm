@@ -28,6 +28,9 @@ JINA_READER_URL = "https://r.jina.ai/"
 JINA_RETRY_ATTEMPTS = 3
 JINA_RETRY_DELAY = 5  # in seconds
 
+# Speech synthesis constants
+SPEECH_RATE = "1.2"  # 1.0 = normal speed, 1.2 = 20% faster, 0.8 = 20% slower
+
 # Suno related constants
 LANGUAGE_MAPPING = {
     "English": "en",

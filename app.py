@@ -6,6 +6,7 @@ main.py
 import glob
 import os
 import time
+import html
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Tuple, Optional
@@ -27,6 +28,7 @@ from constants import (
     ERROR_MESSAGE_TOO_LONG,
     GRADIO_CACHE_DIR,
     GRADIO_CLEAR_CACHE_OLDER_THAN,
+    SPEECH_RATE,
     UI_ALLOW_FLAGGING,
     UI_API_NAME,
     UI_CACHE_EXAMPLES,
@@ -63,6 +65,13 @@ import string
 def generate_random_filename(length=8):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(length))
+
+def escape_ssml_text(text: str) -> str:
+    """Escape special characters for SSML/XML content."""
+    # Use html.escape to handle &, <, > and then manually handle quotes
+    escaped = html.escape(text, quote=False)
+    # Additional escaping for SSML if needed
+    return escaped
 
 def generate_podcast(
     files: List[str],
@@ -148,12 +157,13 @@ def generate_podcast(
     ssml = "<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='https://www.w3.org/2001/mstts' xml:lang='en-US'>"
 
     for line in llm_output.dialogue:
+        escaped_text = escape_ssml_text(line.text)
         if line.speaker == "Host (Alice)":
             speaker = f"**Host**: {line.text}"
-            ssml += f"\n<voice name='{voice[language]['host']['voice']}'>{line.text}</voice>"
+            ssml += f"\n<voice name='{voice[language]['host']['voice']}'><prosody rate='{SPEECH_RATE}'>{escaped_text}</prosody></voice>"
         else:
             speaker = f"**{llm_output.name_of_guest}**: {line.text}"
-            ssml += f"\n<voice name='{voice[language]['guest']['voice']}'>{line.text}</voice>"
+            ssml += f"\n<voice name='{voice[language]['guest']['voice']}'><prosody rate='{SPEECH_RATE}'>{escaped_text}</prosody></voice>"
         transcript += speaker + "\n\n"
 
     ssml += "</speak>"
@@ -170,6 +180,10 @@ def generate_podcast(
 
     # Creates a speech synthesizer using the Azure Speech Service.
     speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config, audio_config=audio_output)
+
+    # Log the SSML for debugging
+    logger.info(f"SSML content length: {len(ssml)} characters")
+    logger.debug(f"SSML content: {ssml[:500]}...")  # Log first 500 chars for debugging
 
     # Synthesizes the received text to speech.
     result = speech_synthesizer.speak_ssml_async(ssml).get()

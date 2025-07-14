@@ -60,7 +60,7 @@ QUESTION_MODIFIER = "PLEASE ANSWER THE FOLLOWING QN:"
 
 TONE_MODIFIER = "TONE: The tone of the podcast should be"
 
-LANGUAGE_MODIFIER = "OUTPUT LANGUAGE <IMPORTANT>: The the podcast should be"
+LANGUAGE_MODIFIER = "OUTPUT LANGUAGE <IMPORTANT>: The podcast should be"
 
 LENGTH_MODIFIERS = {
     "Short (1-2 min)": "Keep the podcast brief, around 1-2 minutes long.",

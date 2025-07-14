@@ -29,7 +29,9 @@ from constants import (
 
 import os
 from dotenv import load_dotenv
-load_dotenv()
+
+# Load environment variables from .env file, overriding system environment
+load_dotenv(override=True)
 
 from schema import ShortDialogue, MediumDialogue
 
